@@ -4,7 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "nodemon src/app.js",
+    "dev": "nodemon src/app.js",
+    "test": "ava"
   },
   "repository": {
     "type": "git",
@@ -20,6 +22,8 @@
   "homepage": "https://github.com/CHARLE123455/Accolade_LMS#readme",
   "dependencies": {
     "apollo-server-express": "^3.13.0",
+    "ava": "^6.2.0",
+    "cloudinary": "^2.6.0",
     "compression": "^1.8.0",
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",
@@ -27,7 +31,9 @@
     "graphql": "^16.10.0",
     "helmet": "^8.1.0",
     "mongoose": "^8.13.1",
-    "redis": "^4.7.0"
+    "redis": "^4.7.0",
+    "sequelize": "^6.37.7",
+    "sequelize-cli": "^6.6.2"
   },
   "devDependencies": {
     "@types/express": "^5.0.1",
