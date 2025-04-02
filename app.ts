@@ -1,17 +1,25 @@
 import express from 'express';
+import mongoose from 'mongoose';
 import dotenv from 'dotenv';
+import cors from 'cors';
 dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Middleware
-app.use(express.json());
+// Connect to MongoDB
+if (!process.env.MONGODB_URI) {
+    throw new Error('MONGODB_URI is not defined in environment variables');
+}
+mongoose.connect(process.env.MONGODB_URI)
+    .then(() => console.log('Connected to Database successfully !!!'))
 
-// Default route
-app.get('/', (req, res) => {
-    res.send('Welcome to the Accolade LMS!');
-});
+
+app.use(cors());
+
+// Middleware
+app.use(cors());
+app.use(express.json());
 
 // Start the server
 app.listen(PORT, () => {

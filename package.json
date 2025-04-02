@@ -30,10 +30,12 @@
     "express": "^4.21.2",
     "graphql": "^16.10.0",
     "helmet": "^8.1.0",
+    "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.13.1",
     "redis": "^4.7.0",
     "sequelize": "^6.37.7",
-    "sequelize-cli": "^6.6.2"
+    "sequelize-cli": "^6.6.2",
+    "uuid": "^11.1.0"
   },
   "devDependencies": {
     "@types/express": "^5.0.1",
