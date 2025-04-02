@@ -2,10 +2,10 @@
   "name": "accolade_lms",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "app.ts",
   "scripts": {
-    "start": "nodemon src/app.js",
-    "dev": "nodemon src/app.js",
+    "start": "ts-node app.ts",
+    "dev": "nodemon --exec ts-node app.ts",
     "test": "ava"
   },
   "repository": {
