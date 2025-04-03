@@ -2,7 +2,6 @@ import Student from "../models/studentModel";
 import Teacher from "../models/teacherModel";
 import mongoose from "mongoose";
 
-
 export const getAllStudentsService = async () => {
     return await Student.find().populate("teachers books");
 };
@@ -15,8 +14,8 @@ export const getStudentsByTeacherService = async (teacherId: string) => {
     return await Student.find({ teachers: teacherId }).populate("teachers books");
 };
 
-export const createStudentService = async (name: string, age: number, grade: string) => {
-    const student = new Student({ name, age, grade });
+export const createStudentService = async (firstName: string, lastName: string, age: number) => {
+    const student = new Student({ firstName, lastName, age });
     await student.save();
     return student;
 };
@@ -29,7 +28,7 @@ export const deleteStudentService = async (id: string) => {
     const student = await Student.findById(id);
     if (!student) return false;
 
-    if (student.teachers && student.teachers.length > 0) {
+    if (student.teachers?.length > 0) {
         await Teacher.updateMany({ _id: { $in: student.teachers } }, { $pull: { students: student._id } });
     }
 
@@ -43,13 +42,20 @@ export const addTeacherToStudentService = async (studentId: string, teacherId: s
 
     if (!student || !teacher) return false;
 
-    if (!student.teachers.includes(new mongoose.Types.ObjectId(teacherId))) {
-        student.teachers.push(new mongoose.Types.ObjectId(teacherId));
+    const teacherObjId = new mongoose.Types.ObjectId(teacherId);
+    const studentObjId = new mongoose.Types.ObjectId(studentId);
+
+    if (!student.teachers.includes(teacherObjId)) {
+        student.teachers.push(teacherObjId);
         await student.save();
     }
 
-    if (!teacher.students.includes(new mongoose.Types.ObjectId(studentId))) {
-        teacher.students.push(new mongoose.Types.ObjectId(studentId));
+    if (!teacher.students) {
+        teacher.students = [];
+    }
+
+    if (!teacher.students.includes(studentObjId)) {
+        teacher.students.push(studentObjId);
         await teacher.save();
     }
 

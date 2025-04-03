@@ -1,18 +1,22 @@
 import express from "express";
-import Student from "../models/student.model";
+import {
+  getAllStudents,
+  getStudentById,
+  getStudentsByTeacher,
+  createStudent,
+  updateStudent,
+  deleteStudent,
+  addTeacherToStudent,
+} from "../controllers/studentController";
 
 const router = express.Router();
 
-router.get("/", async (_, res) => {
-  const students = await Student.find().populate("teacher books");
-  res.json(students);
-});
-
-router.post("/", async (req, res) => {
-  const { name, age, teacherId } = req.body;
-  const student = new Student({ name, age, teacher: teacherId });
-  await student.save();
-  res.status(201).json(student);
-});
+router.get("/students", getAllStudents);
+router.get("/students/:id", getStudentById);
+router.get("/students/teacher/:teacherId", getStudentsByTeacher);
+router.post("/students", createStudent);
+router.put("/students/:id", updateStudent);
+router.delete("/students/:id", deleteStudent);
+router.post("/students/:studentId/teachers/:teacherId", addTeacherToStudent);
 
 export default router;

@@ -15,9 +15,11 @@ const studentResolvers = {
   Mutation: {
     addStudent: async (
       _: any,
-      { name, age, grade, teacherId }: { name: string; age: number; grade: string; teacherId: string }
+      { firstName, lastName, age, teacherId }: 
+      { firstName: string; lastName: string; age: number; teacherId?: string }
     ) => {
-      const student = await createStudentService(name, age, grade);
+      const student = await createStudentService(firstName, lastName, age);
+
       if (teacherId) {
         await addTeacherToStudentService(student.id.toString(), teacherId);
       }
@@ -25,12 +27,13 @@ const studentResolvers = {
     },
     updateStudent: async (
       _: any,
-      { id, name, age, grade }: { id: string; name?: string; age?: number; grade?: string }
+      { id, firstName, lastName, age }: 
+      { id: string; firstName?: string; lastName?: string; age?: number }
     ) => {
       const updateData: any = {};
-      if (name) updateData.name = name;
+      if (firstName) updateData.firstName = firstName;
+      if (lastName) updateData.lastName = lastName;
       if (age) updateData.age = age;
-      if (grade) updateData.grade = grade;
 
       return await updateStudentService(id, updateData);
     },
@@ -39,8 +42,12 @@ const studentResolvers = {
     },
   },
   Student: {
-    teachers: async (parent: any) => parent.teachers,
-    books: async (parent: any) => parent.books,
+    teachers: async (parent: any) => {
+      return await parent.populate("teachers").then((s: any) => s.teachers);
+    },
+    books: async (parent: any) => {
+      return await parent.populate("books").then((s: any) => s.books);
+    },
   },
 };
 
