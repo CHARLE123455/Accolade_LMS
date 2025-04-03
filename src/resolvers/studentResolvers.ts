@@ -1,77 +1,47 @@
-import Student from "../models/studentModel";
-import Teacher from "../models/teacherModel";
-import Book from "../models/bookModel";
+import {
+  getAllStudentsService,
+  getStudentByIdService,
+  createStudentService,
+  updateStudentService,
+  deleteStudentService,
+  addTeacherToStudentService,
+} from "../services/studentService";
 
 const studentResolvers = {
   Query: {
-    students: async () => await Student.find().populate("teachers books"),
-    student: async (_: any, { id }: { id: string }) => await Student.findById(id).populate("teachers books"),
+    students: async () => await getAllStudentsService(),
+    student: async (_: any, { id }: { id: string }) => await getStudentByIdService(id),
   },
   Mutation: {
     addStudent: async (
-      _: any, 
-      { firstName, lastName, age, teacherId }: 
-      { firstName: string; lastName: string; age: number; teacherId: string }
+      _: any,
+      { name, age, grade, teacherId }: { name: string; age: number; grade: string; teacherId: string }
     ) => {
-      const student = new Student({ 
-        firstName, 
-        lastName, 
-        age,
-        teachers: [teacherId]
-      });
-      
-      await student.save();
-
-      await Teacher.findByIdAndUpdate(teacherId, { $push: { students: student._id } });
-
+      const student = await createStudentService(name, age, grade);
+      if (teacherId) {
+        await addTeacherToStudentService(student.id.toString(), teacherId);
+      }
       return student;
     },
     updateStudent: async (
       _: any,
-      { id, firstName, lastName, age }: 
-      { id: string; firstName?: string; lastName?: string; age?: number }
+      { id, name, age, grade }: { id: string; name?: string; age?: number; grade?: string }
     ) => {
       const updateData: any = {};
-      if (firstName) updateData.firstName = firstName;
-      if (lastName) updateData.lastName = lastName;
+      if (name) updateData.name = name;
       if (age) updateData.age = age;
-      
-      const updatedStudent = await Student.findByIdAndUpdate(
-        id,
-        { $set: updateData },
-        { new: true }
-      ).populate("teachers books");
-      
-      return updatedStudent;
+      if (grade) updateData.grade = grade;
+
+      return await updateStudentService(id, updateData);
     },
     deleteStudent: async (_: any, { id }: { id: string }) => {
-      const student = await Student.findById(id);
-      
-      if (!student) return false;
-      
-      await Teacher.updateMany(
-        { students: student._id },
-        { $pull: { students: student._id } }
-      );
-      
-  
-      await Book.updateMany(
-        { student: student._id },
-        { $unset: { student: "" } }
-      );
-      
-      await Student.findByIdAndDelete(id);
-      return true;
-    }
+      return await deleteStudentService(id);
+    },
   },
   Student: {
-    teachers: async (parent: any) => {
-      return await Teacher.find({ _id: { $in: parent.teachers } });
-    },
-    books: async (parent: any) => {
-      return await Book.find({ _id: { $in: parent.books } });
-    }
-  }
+    teachers: async (parent: any) => parent.teachers,
+    books: async (parent: any) => parent.books,
+  },
 };
 
 export default studentResolvers;

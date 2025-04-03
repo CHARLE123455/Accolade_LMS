@@ -1,18 +1,21 @@
 import express from "express";
-import Book from "../models/book.model";
+import * as bookController from "../controllers/bookController";
 
 const router = express.Router();
 
-router.get("/", async (_, res) => {
-  const books = await Book.find().populate("student");
-  res.json(books);
-});
+// GET /books - Retrieve all books
+router.get("/", bookController.getAllBooks);
 
-router.post("/", async (req, res) => {
-  const { title, author, studentId } = req.body;
-  const book = new Book({ title, author, student: studentId || null });
-  await book.save();
-  res.status(201).json(book);
-});
+// GET /books/:id - Retrieve a single book by ID
+router.get("/:id", bookController.getBookById);
+
+// POST /books - Create a new book
+router.post("/", bookController.createBook);
+
+// PUT /books/:id - Update a book by ID
+router.put("/:id", bookController.updateBook);
+
+// DELETE /books/:id - Delete a book by ID
+router.delete("/:id", bookController.deleteBook);
 
 export default router;
