@@ -47,6 +47,8 @@ const typeDefs = gql`
     deleteTeacher(id: ID!): Boolean
     deleteStudent(id: ID!): Boolean
     deleteBook(id: ID!): Boolean
+    addStudentToTeacher(studentId: ID!, teacherId: ID!): Student
+
   }
 `;
 
