@@ -11,12 +11,12 @@ import {
 
 const router = Router();
 
-router.get("/teachers", getAllTeachers);
-router.get("/teachers/:id", getTeacherById);
-router.get("/teachers/:id/students", getStudentsByTeacher);
-router.post("/teachers", createTeacher);
-router.put("/teachers/:id", updateTeacher);
-router.delete("/teachers/:id", deleteTeacher);
-router.post("/teachers/:teacherId/students/:studentId", addStudentToTeacher);
+router.get("/all", getAllTeachers);
+router.get("/:id", getTeacherById);
+router.get("/:id/students", getStudentsByTeacher);
+router.post("/create", createTeacher);
+router.patch("/:id", updateTeacher);
+router.delete("/:id", deleteTeacher);
+router.post("/:teacherId/students/:studentId", addStudentToTeacher);
 
 export default router;

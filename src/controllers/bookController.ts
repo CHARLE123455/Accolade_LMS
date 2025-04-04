@@ -19,7 +19,7 @@ export const getBookById = async (req: Request, res: Response, next: NextFunctio
         }
         res.json(book);
     } catch (error) {
-        next(error);
+        next(error); 
     }
 };
 

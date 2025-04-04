@@ -21,7 +21,7 @@ export const createTeacherService = async (
     password: string, 
     subject: string
   ) => {
-    const teacher = new Teacher({ firstName, lastName, email, password, subject });
+    const teacher = new Teacher({ firstName, lastName, email, password, subject }); 
     await teacher.save();
     return teacher;
   };

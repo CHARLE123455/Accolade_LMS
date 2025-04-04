@@ -1,4 +1,5 @@
-import express, { Application } from 'express';
+
+import express from 'express';
 
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
@@ -15,7 +16,7 @@ import teacherRoutes from "./src/routes/teacherRoutes";
 import studentRoutes from "./src/routes/studentRoutes";
 import bookRoutes from "./src/routes/bookRoutes";
 
-const app: Application = express();
+const app = express();
 const PORT = process.env.PORT || 3000;
 
 // Connect to MongoDB
@@ -31,9 +32,9 @@ app.use(cors());
 app.use(express.json());
 
 // REST API Routes
-app.use("/teachers", teacherRoutes);
-app.use("/students", studentRoutes);
-app.use("/books", bookRoutes);
+app.use("/api/v1/teachers", teacherRoutes);
+app.use("/api/v1/students", studentRoutes);
+app.use("/api/v1/books", bookRoutes);
 
 // GraphQL Setup
 async function startServer() {
@@ -43,6 +44,7 @@ async function startServer() {
     });
 
     await server.start();
+    server.applyMiddleware({ app: app as any });
     app.listen(PORT, () => {
         console.log(`Server running on http://localhost:${PORT}`);
         console.log(`GraphQL Server ready at http://localhost:${PORT}${server.graphqlPath}`);

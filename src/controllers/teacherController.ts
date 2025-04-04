@@ -75,7 +75,7 @@ export const deleteTeacher = async (req: Request, res: Response,next: NextFuncti
       res.status(404).json({ error: "Teacher not found" });
       return;
     }
-    res.status(200).json({ message: "Teacher deleted successfully" });
+    res.status(204).json({ message: "Teacher deleted successfully" });
   } catch (error) {
     res.status(500).json({ error: "Failed to delete teacher" });
   }
